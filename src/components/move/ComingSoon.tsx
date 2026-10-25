@@ -1,5 +1,6 @@
 import { useApp } from "@/lib/app-store";
 import { TabScreen } from "./AppGate";
+import { PillButton } from "./ui";
 
 export function ComingSoon({ title, note }: { title: string; note: string }) {
   return (
@@ -10,7 +11,7 @@ export function ComingSoon({ title, note }: { title: string; note: string }) {
 }
 
 function Inner({ title, note }: { title: string; note: string }) {
-  const { settings, status } = useApp();
+  const { settings, status, signOut } = useApp();
   return (
     <main className="px-6 pt-10">
       <h1 className="text-title">{title}</h1>
@@ -18,6 +19,9 @@ function Inner({ title, note }: { title: string; note: string }) {
       <div className="mt-6 rounded-card border-2 border-dashed border-border p-6 text-[1.05rem]">
         {status === "guest" ? "You're using the app without signing in. Your progress saves on this device." : `Signed in${settings.name ? ` as ${settings.name}` : ""}.`}
       </div>
+      <PillButton variant="white" className="mt-6" onClick={() => void signOut()}>
+        {status === "guest" ? "Back to sign in" : "Sign out"}
+      </PillButton>
     </main>
   );
 }

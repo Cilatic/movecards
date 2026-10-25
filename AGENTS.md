@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Exercise/area content is static code in src/lib/data/exercises.ts (not DB) so QR-linked pages render without a backend round trip.
+- All user data goes through useApp() in src/lib/app-store.tsx, which switches between Cloud tables (profiles, completions) and localStorage for guest mode — never query those tables directly from screens.
+- Tab screens wrap in TabScreen (src/components/move/AppGate.tsx) for the sign-in/guest gate and tab bar; exercise pages must not use it (no tab bar there).
+- Text size / high contrast are applied as data attributes on <html>; size everything in rem so it scales.

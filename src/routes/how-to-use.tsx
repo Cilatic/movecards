@@ -16,7 +16,7 @@ export const Route = createFileRoute("/how-to-use")({
 
 function Pick() {
   return (
-    <svg viewBox="0 0 120 90" className="h-24 w-32" aria-hidden>
+    <svg viewBox="0 0 120 90" className="h-20 w-24" aria-hidden>
       <rect x="18" y="14" width="44" height="62" rx="8" className="fill-balance" transform="rotate(-12 40 45)" />
       <rect x="40" y="10" width="44" height="62" rx="8" className="fill-strength" />
       <rect x="62" y="14" width="44" height="62" rx="8" className="fill-background" transform="rotate(12 84 45)" />
@@ -25,7 +25,7 @@ function Pick() {
 }
 function Scan() {
   return (
-    <svg viewBox="0 0 120 90" className="h-24 w-32" aria-hidden>
+    <svg viewBox="0 0 120 90" className="h-20 w-24" aria-hidden>
       <rect x="38" y="6" width="44" height="78" rx="9" className="fill-night" />
       <rect x="43" y="14" width="34" height="56" rx="4" className="fill-background" />
       {[[48, 22], [62, 22], [48, 36], [66, 40], [52, 52], [62, 56]].map(([x, y], i) => <rect key={i} x={x} y={y} width="9" height="9" className="fill-night" />)}
@@ -34,7 +34,7 @@ function Scan() {
 }
 function Done() {
   return (
-    <svg viewBox="0 0 120 90" className="h-24 w-32" aria-hidden>
+    <svg viewBox="0 0 120 90" className="h-20 w-24" aria-hidden>
       <circle cx="60" cy="45" r="34" className="fill-background" />
       <path d="M44 46l11 11 22-24" className="fill-none stroke-strength" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
     </svg>

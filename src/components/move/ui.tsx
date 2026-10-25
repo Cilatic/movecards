@@ -27,7 +27,7 @@ export function PillButton({
   return <button className={cn(pill({ variant }), className)} {...props} />;
 }
 
-export function BackButton({ to, label = "Back" }: { to?: string; label?: string }) {
+export function BackButton({ to, label = "Back" }: { to?: string | undefined; label?: string }) {
   const router = useRouter();
   const cls =
     "inline-flex h-14 w-14 items-center justify-center rounded-full bg-card text-foreground shadow-soft hover:bg-blush";
@@ -131,7 +131,7 @@ export function PictureCard({
       aria-checked={selected}
       onClick={onClick}
       className={cn(
-        "flex min-h-32 flex-1 flex-col items-center justify-center gap-2 rounded-card p-4 text-[1.05rem] font-bold transition",
+        "flex min-h-32 min-w-0 flex-1 flex-col items-center justify-center gap-2 rounded-card px-2 py-4 text-center text-[1.05rem] font-bold leading-tight break-words transition",
         selected ? "bg-blush outline-[3px] outline-night outline-solid" : "bg-card shadow-soft hover:bg-blush/50",
       )}
     >

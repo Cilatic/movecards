@@ -269,7 +269,7 @@ function MarkDoneSheet({ ex, mode, onClose }: { ex: Exercise; mode: "me" | "help
           {version ? <><strong>{VERSION_LABEL[version]}:</strong> {ex.versions[version]}</> : "Pick the one you did."}
         </p>
         <div className="mt-2 space-y-2">
-          <PillButton disabled={!version || busy} onClick={save}><Check className="h-6 w-6" strokeWidth={3} /> Save</PillButton>
+          <PillButton disabled={!version || busy || status === "loading"} onClick={save}><Check className="h-6 w-6" strokeWidth={3} /> Save</PillButton>
           <button type="button" onClick={onClose} className="flex min-h-12 w-full items-center justify-center text-[1.05rem] font-bold underline underline-offset-4">Cancel</button>
         </div>
       </div>

@@ -44,8 +44,8 @@ function Waves({ n }: { n: number }) {
 
 const SIZES: { v: TextSize; label: string; cls: string }[] = [
   { v: "normal", label: "Normal", cls: "text-xl" },
-  { v: "large", label: "Large", cls: "text-2xl" },
-  { v: "largest", label: "Largest", cls: "text-3xl" },
+  { v: "large", label: "Large", cls: "text-[1.45rem]" },
+  { v: "largest", label: "Largest", cls: "text-[1.7rem]" },
 ];
 
 function Settings() {
@@ -62,9 +62,9 @@ function Settings() {
       <Panel title="Your account">
         <p className="text-[1.05rem] text-muted-foreground">{status === "guest" ? "Not signed in – saved on this device" : email}</p>
         <Field id="name" label="Your name" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <div className="flex gap-3">
-          <PillButton onClick={async () => { await updateSettings({ name: name.trim() }); toast.success("Name saved."); }}>Save name</PillButton>
-          <PillButton variant="dark" onClick={async () => { await signOut(); navigate({ to: "/sign-in", replace: true }); }}>
+        <div className="grid grid-cols-2 gap-3">
+          <PillButton className="px-3" onClick={async () => { await updateSettings({ name: name.trim() }); toast.success("Name saved."); }}>Save name</PillButton>
+          <PillButton variant="dark" className="px-3" onClick={async () => { await signOut(); navigate({ to: "/sign-in", replace: true }); }}>
             {status === "guest" ? "Sign in" : "Sign out"}
           </PillButton>
         </div>

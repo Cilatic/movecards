@@ -14,7 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      completions: {
+        Row: {
+          created_at: string
+          done_at: string
+          exercise_id: string
+          id: string
+          mode: string
+          user_id: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          done_at?: string
+          exercise_id: string
+          id?: string
+          mode: string
+          user_id: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          done_at?: string
+          exercise_id?: string
+          id?: string
+          mode?: string
+          user_id?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          high_contrast: boolean
+          id: string
+          mode: string
+          name: string
+          text_size: string
+          updated_at: string
+          video_level: string
+          voice_speed: string
+        }
+        Insert: {
+          created_at?: string
+          high_contrast?: boolean
+          id: string
+          mode?: string
+          name?: string
+          text_size?: string
+          updated_at?: string
+          video_level?: string
+          voice_speed?: string
+        }
+        Update: {
+          created_at?: string
+          high_contrast?: boolean
+          id?: string
+          mode?: string
+          name?: string
+          text_size?: string
+          updated_at?: string
+          video_level?: string
+          voice_speed?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

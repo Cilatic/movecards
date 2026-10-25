@@ -98,7 +98,7 @@ function DoSide({ ex }: { ex: Exercise }) {
   const url = ex.videos[level];
 
   function listen() {
-    if (!("speechSynthesis" in window)) return toast.error("Listening isn't available on this device.");
+    if (!("speechSynthesis" in window)) { toast.error("Listening isn't available on this device."); return; }
     const synth = window.speechSynthesis;
     if (speaking) { synth.cancel(); setSpeaking(false); return; }
     const u = new SpeechSynthesisUtterance(ex.steps.map((s, i) => `Step ${i + 1}. ${s.text}`).join(" "));

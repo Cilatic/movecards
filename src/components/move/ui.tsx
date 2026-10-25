@@ -27,7 +27,7 @@ export function PillButton({
   return <button className={cn(pill({ variant }), className)} {...props} />;
 }
 
-export function BackButton({ to, label = "Back" }: { to?: string; label?: string }) {
+export function BackButton({ to, label = "Back" }: { to?: string | undefined; label?: string }) {
   const router = useRouter();
   const cls =
     "inline-flex h-14 w-14 items-center justify-center rounded-full bg-card text-foreground shadow-soft hover:bg-blush";

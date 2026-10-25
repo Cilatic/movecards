@@ -77,7 +77,7 @@ function ExercisePage() {
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-[30rem] bg-gradient-to-t from-background via-background to-transparent px-5 pb-5 pt-8">
         <PillButton onClick={() => setSheet(true)}><Check className="h-6 w-6" strokeWidth={3} /> Mark as done</PillButton>
       </div>
-      {sheet && <MarkDoneSheet ex={ex} mode={help ? "helping" : settings.mode} onClose={() => setSheet(false)} />}
+      {sheet && <MarkDoneSheet ex={ex} mode={settings.mode} onClose={() => setSheet(false)} />}
     </main>
   );
 }

@@ -19,6 +19,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AreaAreaIdRouteImport } from './routes/area.$areaId'
+import { Route as ExerciseIdRouteImport } from './routes/exercise.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +71,11 @@ const AreaAreaIdRoute = AreaAreaIdRouteImport.update({
   path: '/area/$areaId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExerciseIdRoute = ExerciseIdRouteImport.update({
+  id: '/exercise/$id',
+  path: '/exercise/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/area/$areaId': typeof AreaAreaIdRoute
+  '/exercise/$id': typeof ExerciseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/area/$areaId': typeof AreaAreaIdRoute
+  '/exercise/$id': typeof ExerciseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sign-in': typeof SignInRoute
   '/area/$areaId': typeof AreaAreaIdRoute
+  '/exercise/$id': typeof ExerciseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sign-in'
     | '/area/$areaId'
+    | '/exercise/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sign-in'
     | '/area/$areaId'
+    | '/exercise/$id'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sign-in'
     | '/area/$areaId'
+    | '/exercise/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +170,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SignInRoute: typeof SignInRoute
   AreaAreaIdRoute: typeof AreaAreaIdRoute
+  ExerciseIdRoute: typeof ExerciseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AreaAreaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/exercise/$id': {
+      id: '/exercise/$id'
+      path: '/exercise/$id'
+      fullPath: '/exercise/$id'
+      preLoaderRoute: typeof ExerciseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -246,6 +266,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SignInRoute: SignInRoute,
   AreaAreaIdRoute: AreaAreaIdRoute,
+  ExerciseIdRoute: ExerciseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

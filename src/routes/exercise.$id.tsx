@@ -227,7 +227,7 @@ function SimpleView({ ex, onClose }: { ex: Exercise; onClose: () => void }) {
 }
 
 function MarkDoneSheet({ ex, mode, onClose }: { ex: Exercise; mode: "me" | "helping"; onClose: () => void }) {
-  const { addCompletion } = useApp();
+  const { addCompletion, status, continueAsGuest } = useApp();
   const navigate = useNavigate();
   const [version, setVersion] = useState<Version | null>(null);
   const [busy, setBusy] = useState(false);
@@ -235,6 +235,7 @@ function MarkDoneSheet({ ex, mode, onClose }: { ex: Exercise; mode: "me" | "help
   async function save() {
     if (!version) return;
     setBusy(true);
+    if (status === "signed-out") continueAsGuest();
     await addCompletion({ exerciseId: ex.id, version, mode, doneAt: new Date().toISOString() });
     toast.success("Well done! Saved to your history.");
     navigate({ to: "/history" });

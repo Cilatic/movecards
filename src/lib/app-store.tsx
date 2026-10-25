@@ -77,7 +77,9 @@ const fromRow = (r: ProfileRow): Settings => ({
   videoLevel: r.video_level as Settings["videoLevel"],
 });
 const toRow = (s: Partial<Settings>) => {
-  const r: Record<string, unknown> = {};
+  const r: {
+    name?: string; mode?: string; text_size?: string; high_contrast?: boolean; voice_speed?: string; video_level?: string;
+  } = {};
   if (s.name !== undefined) r.name = s.name;
   if (s.mode !== undefined) r.mode = s.mode;
   if (s.textSize !== undefined) r.text_size = s.textSize;
@@ -98,7 +100,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const { data: prof } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
     if (prof) setSettings(fromRow(prof));
     else {
-      const name = (s.user.user_metadata?.name || s.user.user_metadata?.full_name || "") as string;
+      const name = (s.user.user_metadata?.['name'] || s.user.user_metadata?.['full_name'] || "") as string;
       await supabase.from("profiles").insert({ id: uid, name });
       setSettings({ ...DEFAULT_SETTINGS, name });
     }
@@ -149,8 +151,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Apply reading preferences to the whole app
   useEffect(() => {
     const html = document.documentElement;
-    html.dataset.text = settings.textSize;
-    html.dataset.contrast = settings.highContrast ? "high" : "normal";
+    html.dataset['text'] = settings.textSize;
+    html.dataset['contrast'] = settings.highContrast ? "high" : "normal";
   }, [settings.textSize, settings.highContrast]);
 
   const isGuest = status === "guest";
@@ -191,7 +193,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateCompletion = useCallback(
     async (id: string, patch: Partial<Pick<Completion, "version" | "doneAt">>) => {
       if (session) {
-        const row: Record<string, string> = {};
+        const row: { version?: string; done_at?: string } = {};
         if (patch.version) row.version = patch.version;
         if (patch.doneAt) row.done_at = patch.doneAt;
         await supabase.from("completions").update(row).eq("id", id);

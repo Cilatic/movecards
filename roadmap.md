@@ -1,4 +1,8 @@
 # Move Cards roadmap
+- [ ] Shared Easier/Standard step selection with Standard fallback; remove duplicate Helping boxes
+- [ ] Home quick help popup and progress-card navigation; preserve other tiles
+- [ ] Clear history only in Settings; label exercise eye control Large text
+- [ ] Investigate navigation delay and verify quick loading feedback
 - [x] Consistent history-aware back buttons on every page except Home
 - [x] Subtle hover, pressed and keyboard focus states
 - [x] Saved weekly goal (1–7 days, default 3) editable from Settings, Home and History

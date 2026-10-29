@@ -7,6 +7,8 @@ import { BackButton, Field, PillButton } from "@/components/move/ui";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Forgot password · Move Cards" },
       { name: "description", content: "Get a link to reset your Move Cards password." },
       { property: "og:title", content: "Forgot password · Move Cards" },

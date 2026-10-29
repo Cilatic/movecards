@@ -10,6 +10,8 @@ import { BackButton } from "@/components/move/ui";
 export const Route = createFileRoute("/exercises")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Exercises · Move Cards" },
       { name: "description", content: "35 gentle exercises in 5 areas: Strength, Flexibility, Heart, Balance and Mind." },
       { property: "og:title", content: "Exercises · Move Cards" },

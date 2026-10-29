@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/history")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "History · Move Cards" },
       { name: "description", content: "See the exercises you've done this week." },
       { property: "og:title", content: "History · Move Cards" },

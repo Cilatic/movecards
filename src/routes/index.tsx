@@ -16,6 +16,8 @@ import { goalProgress } from "@/lib/weekly-goal";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Move Cards – gentle exercises for every day" },
       { name: "description", content: "Companion app for the Move Cards deck: 35 gentle exercises for older adults and carers." },
       { property: "og:title", content: "Move Cards – gentle exercises for every day" },

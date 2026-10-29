@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Settings · Move Cards" },
       { name: "description", content: "Text size, contrast, voice speed and more." },
       { property: "og:title", content: "Settings · Move Cards" },

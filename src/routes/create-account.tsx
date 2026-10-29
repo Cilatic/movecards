@@ -10,6 +10,8 @@ import { HelpingAvatar, MeAvatar } from "@/components/move/illustrations";
 export const Route = createFileRoute("/create-account")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Create account · Move Cards" },
       { name: "description", content: "Create a Move Cards account to save your exercises and settings." },
       { property: "og:title", content: "Create account · Move Cards" },

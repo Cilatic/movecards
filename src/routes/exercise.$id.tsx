@@ -17,6 +17,8 @@ export const Route = createFileRoute("/exercise/$id")({
   },
   head: ({ loaderData }) => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: `${loaderData?.name ?? "Exercise"} · Move Cards` },
       { name: "description", content: loaderData?.benefit ?? "A gentle exercise from the Move Cards deck." },
       { property: "og:title", content: `${loaderData?.name ?? "Exercise"} · Move Cards` },

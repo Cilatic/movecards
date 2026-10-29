@@ -10,6 +10,8 @@ import { SignInHero } from "@/components/move/illustrations";
 export const Route = createFileRoute("/sign-in")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Sign in · Move Cards" },
       { name: "description", content: "Sign in to Move Cards to see your exercise history and settings." },
       { property: "og:title", content: "Sign in · Move Cards" },

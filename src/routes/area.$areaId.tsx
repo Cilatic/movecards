@@ -16,6 +16,8 @@ export const Route = createFileRoute("/area/$areaId")({
   },
   head: ({ loaderData }) => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: `${loaderData?.name ?? "Area"} exercises · Move Cards` },
       { name: "description", content: `7 gentle ${loaderData?.name ?? ""} exercises from the Move Cards deck.` },
       { property: "og:title", content: `${loaderData?.name ?? "Area"} · Move Cards` },

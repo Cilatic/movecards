@@ -17,3 +17,5 @@
 - BackButton uses TanStack's positive history index for in-app back navigation and a typed parent fallback for direct entry; never use browser history length.
 - Weekly goal validation/progress is shared in a browser-safe helper, and all goal edits persist through useApp so account and guest screens stay consistent.
 - Shared interaction feedback lives in global CSS and applies only to interactive elements, leaving static content and placeholders unchanged.
+- Standard exercise steps remain in steps; optional easierSteps resolve through getExerciseSteps for displayed, spoken and large-text instructions so level fallback stays consistent without duplicating content.
+- Exercise level state lives on the exercise page and is shared across card sides and large-text view so navigation between views retains the selection.

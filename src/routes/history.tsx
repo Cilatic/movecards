@@ -9,7 +9,7 @@ import { TabScreen } from "@/components/move/AppGate";
 import { BackButton, PillButton, pill } from "@/components/move/ui";
 import { WeeklyGoalDialog } from "@/components/move/WeeklyGoal";
 import { goalProgress } from "@/lib/weekly-goal";
-import { AREA_BG, Bars, ClearHistoryDialog, VERSION_LABEL } from "@/components/move/shared";
+import { AREA_BG, Bars, VERSION_LABEL } from "@/components/move/shared";
 import { AreaFigure } from "@/components/move/AreaFigure";
 import { cn } from "@/lib/utils";
 
@@ -34,12 +34,11 @@ export const Route = createFileRoute("/history")({
 const LETTERS = ["M", "T", "W", "T", "F", "S", "S"];
 
 function History() {
-  const { completions, settings, clearHistory } = useApp();
+  const { completions, settings } = useApp();
   const mine = completions.filter((c) => c.mode === settings.mode);
   const stats = weekStats(mine);
   const [selected, setSelected] = useState(() => dayKey(new Date()));
   const [menu, setMenu] = useState(false);
-  const [confirm, setConfirm] = useState(false);
   const [pickMode, setPickMode] = useState<"edit" | "delete" | null>(null);
   const [editing, setEditing] = useState<Completion | null>(null);
   const [goalOpen, setGoalOpen] = useState(false);
@@ -63,7 +62,6 @@ function History() {
             <div role="menu" className="absolute right-0 z-30 mt-2 w-64 overflow-hidden rounded-3xl bg-card py-2 shadow-float">
               <MenuItem onClick={() => { setMenu(false); setPickMode("edit"); }}>Edit an entry</MenuItem>
               <MenuItem onClick={() => { setMenu(false); setPickMode("delete"); }}>Delete an entry</MenuItem>
-              <MenuItem danger onClick={() => { setMenu(false); setConfirm(true); }}>Clear all history</MenuItem>
             </div>
           )}
         </div>
@@ -123,7 +121,6 @@ function History() {
         </ul>
       )}
 
-      {confirm && <ClearHistoryDialog onClose={() => setConfirm(false)} onConfirm={async () => { await clearHistory(); toast.success("History cleared."); }} />}
       {editing && <EditDialog c={editing} onClose={() => setEditing(null)} />}
       {goalOpen && <WeeklyGoalDialog onClose={() => setGoalOpen(false)} />}
     </main>
@@ -187,7 +184,8 @@ function EditDialog({ c, onClose }: { c: Completion; onClose: () => void }) {
   async function save() {
     const [y, m, dd] = day.split("-").map(Number);
     const next = new Date(d);
-    next.setFullYear(y!, m! - 1, dd!);
+    if (y === undefined || m === undefined || dd === undefined) return;
+    next.setFullYear(y, m - 1, dd);
     await updateCompletion(c.id, { version, doneAt: next.toISOString() });
     toast.success("Entry updated.");
     onClose();

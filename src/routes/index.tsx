@@ -12,6 +12,7 @@ import { useState } from "react";
 import { PillButton } from "@/components/move/ui";
 import { WeeklyGoalDialog } from "@/components/move/WeeklyGoal";
 import { goalProgress } from "@/lib/weekly-goal";
+import { QuickHelp } from "@/components/move/QuickHelp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,6 +40,7 @@ function Home() {
   const stats = weekStats(completions.filter((c) => c.mode === settings.mode));
   const ring = 2 * Math.PI * 34;
   const [goalOpen, setGoalOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   return (
     <main>
@@ -48,7 +50,7 @@ function Home() {
         <div aria-hidden className="absolute -bottom-16 -left-16 h-40 w-40 rounded-full border-2 border-night-foreground/15" />
         <div className="relative flex items-center justify-between">
           <span className="flex items-center gap-2 text-lg font-bold"><Logo /> Move Cards</span>
-          <Link to="/how-to-use" aria-label="How to use the cards" className="flex h-14 w-14 items-center justify-center rounded-full bg-night-foreground/20 text-2xl font-extrabold">?</Link>
+          <PillButton type="button" aria-label="Help" onClick={() => setHelpOpen(true)} className="h-14 w-14 bg-night-foreground/20 p-0 text-2xl font-extrabold text-night-foreground">?</PillButton>
         </div>
         <h1 className="text-title relative mt-6">Hello{settings.name ? `, ${settings.name}` : ""}!</h1>
         <div className="relative mt-5">
@@ -66,9 +68,10 @@ function Home() {
       </header>
 
       <div className="relative -mt-16 space-y-4 px-5">
-        <section aria-label="This week" className="rounded-card bg-card p-5 shadow-soft">
-          <div className="flex items-center gap-4">
-            <PillButton variant="white" aria-label={`Change weekly goal, ${stats.daysDone} of ${settings.weeklyGoal} days`} onClick={() => setGoalOpen(true)} className="relative h-24 w-24 shrink-0 rounded-full p-0 shadow-none">
+        <section aria-label="This week" className="relative rounded-card bg-card p-5 shadow-soft">
+          <Link to="/history" aria-label="View this week in History" className="absolute inset-0 rounded-card" />
+          <div className="pointer-events-none relative flex items-center gap-4">
+            <PillButton variant="white" aria-label={`Change weekly goal, ${stats.daysDone} of ${settings.weeklyGoal} days`} onClick={() => setGoalOpen(true)} className="pointer-events-auto relative h-24 w-24 shrink-0 rounded-full p-0 shadow-none">
               <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90" aria-hidden>
                 <circle cx="40" cy="40" r="34" className="fill-none stroke-blush" strokeWidth="9" />
                 <circle cx="40" cy="40" r="34" className="fill-none stroke-strength" strokeWidth="9" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - goalProgress(stats.daysDone, settings.weeklyGoal))} />
@@ -87,7 +90,7 @@ function Home() {
               <p className="text-[0.95rem] leading-tight text-muted-foreground">day streak</p>
             </div>
           </div>
-          <ol className="mt-4 flex justify-between">
+          <ol className="pointer-events-none relative mt-4 flex justify-between">
             {stats.days.map((d, i) => (
               <li key={i} className="flex flex-col items-center gap-1">
                 <span
@@ -156,6 +159,7 @@ function Home() {
         </Link>
       </div>
       {goalOpen && <WeeklyGoalDialog onClose={() => setGoalOpen(false)} />}
+      {helpOpen && <QuickHelp onClose={() => setHelpOpen(false)} />}
     </main>
   );
 }

@@ -2,7 +2,7 @@ import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Check, Eye, Lightbulb, Play, Volume2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getArea, getExercise, type Exercise, type Version } from "@/lib/data/exercises";
+import { getArea, getExercise, getExerciseSteps, type Exercise, type Version } from "@/lib/data/exercises";
 import { useApp } from "@/lib/app-store";
 import { BackButton, PillButton, PillSwitch } from "@/components/move/ui";
 import { AreaFigure } from "@/components/move/AreaFigure";
@@ -32,17 +32,19 @@ type Side = "do" | "help";
 
 function ExercisePage() {
   const { id } = Route.useLoaderData();
-  const ex = getExercise(id)!;
-  const area = getArea(ex.area)!;
+  const ex = getExercise(id);
+  const area = ex ? getArea(ex.area) : undefined;
   const { settings } = useApp();
   const [side, setSide] = useState<Side>(settings.mode === "helping" ? "help" : "do");
   const [simple, setSimple] = useState(false);
   const [sheet, setSheet] = useState(false);
+  const [level, setLevel] = useState<"easier" | "standard">(settings.videoLevel);
   const help = side === "help";
 
   useEffect(() => setSide(settings.mode === "helping" ? "help" : "do"), [settings.mode]);
 
-  if (simple) return <SimpleView ex={ex} onClose={() => setSimple(false)} />;
+  if (!ex || !area) throw notFound();
+  if (simple) return <SimpleView ex={ex} level={level} onClose={() => setSimple(false)} />;
 
   return (
     <main className="mx-auto min-h-screen max-w-[30rem] pb-32">
@@ -51,9 +53,9 @@ function ExercisePage() {
         <AreaFigure pose={area.pose} className="absolute bottom-0 right-6 h-36 w-32" />
         <div className="relative flex items-center justify-between">
           <BackButton areaId={ex.area} />
-          <button type="button" onClick={() => setSimple(true)} aria-label="Simple view" className="flex h-14 w-14 items-center justify-center rounded-full bg-card shadow-soft">
-            <Eye className="h-6 w-6" />
-          </button>
+          <PillButton variant="white" type="button" onClick={() => setSimple(true)} className="w-auto gap-2 px-4 text-base">
+            <Eye className="h-6 w-6 shrink-0" aria-hidden /> Large text
+          </PillButton>
         </div>
         <span className="relative mt-6 inline-block rounded-full bg-card px-4 py-1.5 text-sm font-bold">
           {area.name} · {ex.subArea} {ex.cardNumber}/7
@@ -73,7 +75,8 @@ function ExercisePage() {
           <h1 className="text-title">{ex.name}</h1>
           <p className="mt-2 text-[1.05rem] text-muted-foreground">{ex.benefit}</p>
         </div>
-        {help ? <HelpSide ex={ex} /> : <DoSide ex={ex} />}
+        <PillSwitch label="Exercise level" value={level} onChange={setLevel} tone={help ? "helper" : "night"} options={[{ value: "easier", label: "Easier" }, { value: "standard", label: "Standard" }]} />
+        {help ? <HelpSide ex={ex} /> : <DoSide ex={ex} level={level} />}
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-[30rem] bg-gradient-to-t from-background via-background to-transparent px-5 pb-5 pt-8">
@@ -93,17 +96,17 @@ function Warning({ text }: { text: string }) {
   );
 }
 
-function DoSide({ ex }: { ex: Exercise }) {
+function DoSide({ ex, level }: { ex: Exercise; level: "easier" | "standard" }) {
   const { settings } = useApp();
-  const [level, setLevel] = useState<"easier" | "standard">(settings.videoLevel);
   const [speaking, setSpeaking] = useState(false);
   const url = ex.videos[level];
+  const steps = getExerciseSteps(ex, level);
 
   function listen() {
     if (!("speechSynthesis" in window)) { toast.error("Listening isn't available on this device."); return; }
     const synth = window.speechSynthesis;
     if (speaking) { synth.cancel(); setSpeaking(false); return; }
-    const u = new SpeechSynthesisUtterance(ex.steps.map((s, i) => `Step ${i + 1}. ${s.text}`).join(" "));
+    const u = new SpeechSynthesisUtterance(steps.map((s, i) => `Step ${i + 1}. ${s.text}`).join(" "));
     u.rate = settings.voiceSpeed === "slow" ? 0.75 : 1;
     u.onend = () => setSpeaking(false);
     synth.cancel();
@@ -111,6 +114,10 @@ function DoSide({ ex }: { ex: Exercise }) {
     setSpeaking(true);
   }
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
+  useEffect(() => {
+    window.speechSynthesis?.cancel();
+    setSpeaking(false);
+  }, [level]);
 
   return (
     <>
@@ -125,9 +132,6 @@ function DoSide({ ex }: { ex: Exercise }) {
             <span className="text-[0.95rem] font-semibold">Video · {VERSION_LABEL[level]} · {ex.duration}</span>
           </button>
         )}
-        <div className="mt-3">
-          <PillSwitch label="Video level" value={level} onChange={setLevel} options={[{ value: "easier", label: "Easier" }, { value: "standard", label: "Standard" }]} />
-        </div>
       </div>
       <PillButton variant="white" onClick={listen} aria-pressed={speaking}>
         <Volume2 className="h-6 w-6" /> {speaking ? "Stop listening" : "Listen to the steps"}
@@ -135,7 +139,7 @@ function DoSide({ ex }: { ex: Exercise }) {
       <section>
         <h2 className="text-section">How to do it</h2>
         <ol className="mt-3 space-y-3">
-          {ex.steps.map((s, i) => (
+          {steps.map((s, i) => (
             <li key={i} className="flex items-center gap-4 rounded-card bg-card p-4 shadow-soft">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-night text-lg font-extrabold text-night-foreground">{i + 1}</span>
               <p className="flex-1 text-[1.05rem] font-semibold">{s.text}</p>
@@ -173,16 +177,6 @@ function HelpSide({ ex }: { ex: Exercise }) {
           </ul>
         </div>
       </section>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-card bg-balance p-4 text-night-foreground">
-          <h3 className="text-[1.05rem] font-bold">Make it easier</h3>
-          <p className="mt-1 text-[0.95rem]">{ex.helping.easier}</p>
-        </div>
-        <div className="rounded-card bg-strength p-4 text-night-foreground">
-          <h3 className="text-[1.05rem] font-bold">Make it harder</h3>
-          <p className="mt-1 text-[0.95rem]">{ex.helping.harder}</p>
-        </div>
-      </div>
       <Warning text={ex.helping.safety} />
       <section className="rounded-card bg-card p-5 shadow-soft">
         <h2 className="text-section">Check yourself</h2>
@@ -210,7 +204,7 @@ function HelpSide({ ex }: { ex: Exercise }) {
   );
 }
 
-function SimpleView({ ex, onClose }: { ex: Exercise; onClose: () => void }) {
+function SimpleView({ ex, level, onClose }: { ex: Exercise; level: "easier" | "standard"; onClose: () => void }) {
   return (
     <main className="mx-auto min-h-screen max-w-[30rem] px-6 pb-12 pt-8">
       <button type="button" onClick={onClose} aria-label="Close simple view" className="flex h-14 w-14 items-center justify-center rounded-full bg-card shadow-soft">
@@ -218,7 +212,7 @@ function SimpleView({ ex, onClose }: { ex: Exercise; onClose: () => void }) {
       </button>
       <h1 className="text-title mt-6">{ex.name}</h1>
       <ol className="mt-8 space-y-8">
-        {ex.steps.map((s, i) => (
+        {getExerciseSteps(ex, level).map((s, i) => (
           <li key={i} className="text-[1.6rem] font-bold leading-snug">
             <span className="mr-3 text-primary">{i + 1}.</span>{s.text}
           </li>

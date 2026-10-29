@@ -2,9 +2,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Mode, Version } from "@/lib/data/exercises";
+import { DEFAULT_WEEKLY_GOAL, isWeeklyGoal } from "@/lib/weekly-goal";
 
 export type TextSize = "normal" | "large" | "largest";
 export interface Settings {
+  weeklyGoal: number;
   name: string;
   mode: Mode;
   textSize: TextSize;
@@ -21,6 +23,7 @@ export interface Completion {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  weeklyGoal: DEFAULT_WEEKLY_GOAL,
   name: "",
   mode: "me",
   textSize: "normal",
@@ -61,6 +64,7 @@ function readJSON<T>(key: string, fallback: T): T {
 }
 
 type ProfileRow = {
+  weekly_goal: number;
   name: string;
   mode: string;
   text_size: string;
@@ -69,6 +73,7 @@ type ProfileRow = {
   video_level: string;
 };
 const fromRow = (r: ProfileRow): Settings => ({
+  weeklyGoal: r.weekly_goal,
   name: r.name,
   mode: r.mode as Mode,
   textSize: r.text_size as TextSize,
@@ -78,8 +83,9 @@ const fromRow = (r: ProfileRow): Settings => ({
 });
 const toRow = (s: Partial<Settings>) => {
   const r: {
-    name?: string; mode?: string; text_size?: string; high_contrast?: boolean; voice_speed?: string; video_level?: string;
+    name?: string; mode?: string; text_size?: string; high_contrast?: boolean; voice_speed?: string; video_level?: string; weekly_goal?: number;
   } = {};
+  if (s.weeklyGoal !== undefined) r.weekly_goal = s.weeklyGoal;
   if (s.name !== undefined) r.name = s.name;
   if (s.mode !== undefined) r.mode = s.mode;
   if (s.textSize !== undefined) r.text_size = s.textSize;
@@ -160,12 +166,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const updateSettings = useCallback(
     async (patch: Partial<Settings>) => {
+      if (patch.weeklyGoal !== undefined) {
+        if (!isWeeklyGoal(patch.weeklyGoal)) throw new Error("Weekly goal must be 1 to 7 whole days.");
+        if (session) {
+          const { error } = await supabase.from("profiles").update(toRow(patch)).eq("id", session.user.id);
+          if (error) throw error;
+        }
+      }
       setSettings((prev) => {
         const next = { ...prev, ...patch };
         if (isGuest) localStorage.setItem(GUEST_SETTINGS, JSON.stringify(next));
         return next;
       });
-      if (session) await supabase.from("profiles").update(toRow(patch)).eq("id", session.user.id);
+      if (session && patch.weeklyGoal === undefined) await supabase.from("profiles").update(toRow(patch)).eq("id", session.user.id);
     },
     [isGuest, session],
   );

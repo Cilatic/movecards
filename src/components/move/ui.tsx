@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { Link, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -27,20 +27,18 @@ export function PillButton({
   return <button className={cn(pill({ variant }), className)} {...props} />;
 }
 
-export function BackButton({ to, label = "Back" }: { to?: string | undefined; label?: string }) {
+export function BackButton({ to = "/", areaId, label = "Back" }: { to?: "/" | "/sign-in" | "/exercises"; areaId?: string; label?: string }) {
   const router = useRouter();
   const cls =
     "inline-flex h-14 w-14 items-center justify-center rounded-full bg-card text-foreground shadow-soft hover:bg-blush";
-  if (to)
-    return (
-      <Link to={to} aria-label={label} className={cls}>
-        <ChevronLeft className="h-7 w-7" strokeWidth={2.5} />
-      </Link>
-    );
   return (
-    <button type="button" aria-label={label} className={cls} onClick={() => router.history.back()}>
+    <PillButton type="button" aria-label={label} title={label} className={cn(cls, "w-14 shrink-0 p-0")} onClick={() => {
+      if (router.history.location.state.__TSR_index > 0) router.history.back();
+      else if (areaId) void router.navigate({ to: "/area/$areaId", params: { areaId }, replace: true });
+      else void router.navigate({ to, replace: true });
+    }}>
       <ChevronLeft className="h-7 w-7" strokeWidth={2.5} />
-    </button>
+    </PillButton>
   );
 }
 

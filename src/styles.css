@@ -174,6 +174,30 @@ html[data-text="largest"] { font-size: 125%; }
   }
 }
 
+/* Shared feedback for all interactive controls; static content stays unchanged. */
+:where(button, a[href], input[type="range"], [role="button"]) {
+  -webkit-tap-highlight-color: transparent;
+  transition: filter 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+@media (hover: hover) {
+  :where(button, a[href], input[type="range"], [role="button"]):not(:disabled):hover {
+    filter: brightness(0.96);
+    box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--night) 18%, transparent);
+  }
+}
+:where(button, a[href], [role="button"]):not(:disabled):active {
+  filter: brightness(0.9);
+  transform: scale(0.98);
+}
+:where(button, a[href], input, [role="button"]):focus-visible {
+  outline: 3px solid var(--mustard);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--night);
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button, a[href], input[type="range"], [role="button"]) { transition: none; }
+}
+
 @utility shadow-soft {
   box-shadow: var(--shadow-soft);
 }

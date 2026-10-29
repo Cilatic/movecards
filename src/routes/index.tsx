@@ -8,10 +8,16 @@ import { PillSwitch, pill } from "@/components/move/ui";
 import { Logo } from "@/components/move/illustrations";
 import { AreaFigure } from "@/components/move/AreaFigure";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { PillButton } from "@/components/move/ui";
+import { WeeklyGoalDialog } from "@/components/move/WeeklyGoal";
+import { goalProgress } from "@/lib/weekly-goal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Move Cards – gentle exercises for every day" },
       { name: "description", content: "Companion app for the Move Cards deck: 35 gentle exercises for older adults and carers." },
       { property: "og:title", content: "Move Cards – gentle exercises for every day" },
@@ -32,6 +38,7 @@ function Home() {
   const helping = settings.mode === "helping";
   const stats = weekStats(completions.filter((c) => c.mode === settings.mode));
   const ring = 2 * Math.PI * 34;
+  const [goalOpen, setGoalOpen] = useState(false);
 
   return (
     <main>
@@ -61,16 +68,16 @@ function Home() {
       <div className="relative -mt-16 space-y-4 px-5">
         <section aria-label="This week" className="rounded-card bg-card p-5 shadow-soft">
           <div className="flex items-center gap-4">
-            <div className="relative h-24 w-24 shrink-0">
+            <PillButton variant="white" aria-label={`Change weekly goal, ${stats.daysDone} of ${settings.weeklyGoal} days`} onClick={() => setGoalOpen(true)} className="relative h-24 w-24 shrink-0 rounded-full p-0 shadow-none">
               <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90" aria-hidden>
                 <circle cx="40" cy="40" r="34" className="fill-none stroke-blush" strokeWidth="9" />
-                <circle cx="40" cy="40" r="34" className="fill-none stroke-strength" strokeWidth="9" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - stats.daysDone / 7)} />
+                <circle cx="40" cy="40" r="34" className="fill-none stroke-strength" strokeWidth="9" strokeLinecap="round" strokeDasharray={ring} strokeDashoffset={ring * (1 - goalProgress(stats.daysDone, settings.weeklyGoal))} />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
                 <span className="text-2xl font-extrabold">{stats.daysDone}</span>
-                <span className="text-[0.75rem] font-semibold">of 7 days</span>
+                <span className="text-[0.75rem] font-semibold">of {settings.weeklyGoal} {settings.weeklyGoal === 1 ? "day" : "days"}</span>
               </div>
-            </div>
+            </PillButton>
             <div className="flex-1">
               <p className="text-2xl font-extrabold">{stats.exercisesThisWeek}</p>
               <p className="text-[0.95rem] leading-tight text-muted-foreground">exercises this week</p>
@@ -148,6 +155,7 @@ function Home() {
           <ChevronRight className="h-6 w-6" aria-hidden />
         </Link>
       </div>
+      {goalOpen && <WeeklyGoalDialog onClose={() => setGoalOpen(false)} />}
     </main>
   );
 }

@@ -5,10 +5,13 @@ import { AREAS, exercisesInArea } from "@/lib/data/exercises";
 import { TabScreen } from "@/components/move/AppGate";
 import { AreaFigure } from "@/components/move/AreaFigure";
 import { cn } from "@/lib/utils";
+import { BackButton } from "@/components/move/ui";
 
 export const Route = createFileRoute("/exercises")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Exercises · Move Cards" },
       { name: "description", content: "35 gentle exercises in 5 areas: Strength, Flexibility, Heart, Balance and Mind." },
       { property: "og:title", content: "Exercises · Move Cards" },
@@ -34,7 +37,8 @@ function Exercises() {
   const { completions, settings } = useApp();
   const done = doneExerciseIds(completions.filter((c) => c.mode === settings.mode));
   return (
-    <main className="px-5 pt-10">
+    <main className="px-5 pt-8">
+      <div className="mb-6"><BackButton /></div>
       <h1 className="text-title">Exercises</h1>
       <p className="mt-1 text-[1.05rem] text-muted-foreground">35 exercises in 5 areas</p>
       <ul className="mt-6 grid grid-cols-2 gap-4">

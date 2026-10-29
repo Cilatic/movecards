@@ -55,6 +55,7 @@ export type Database = {
           updated_at: string
           video_level: string
           voice_speed: string
+          weekly_goal: number
         }
         Insert: {
           created_at?: string
@@ -66,6 +67,7 @@ export type Database = {
           updated_at?: string
           video_level?: string
           voice_speed?: string
+          weekly_goal?: number
         }
         Update: {
           created_at?: string
@@ -77,6 +79,7 @@ export type Database = {
           updated_at?: string
           video_level?: string
           voice_speed?: string
+          weekly_goal?: number
         }
         Relationships: []
       }

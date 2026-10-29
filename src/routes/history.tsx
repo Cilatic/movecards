@@ -6,7 +6,9 @@ import { useApp, type Completion } from "@/lib/app-store";
 import { dayKey, weekStats } from "@/lib/stats";
 import { getArea, getExercise, type Version } from "@/lib/data/exercises";
 import { TabScreen } from "@/components/move/AppGate";
-import { PillButton, pill } from "@/components/move/ui";
+import { BackButton, PillButton, pill } from "@/components/move/ui";
+import { WeeklyGoalDialog } from "@/components/move/WeeklyGoal";
+import { goalProgress } from "@/lib/weekly-goal";
 import { AREA_BG, Bars, ClearHistoryDialog, VERSION_LABEL } from "@/components/move/shared";
 import { AreaFigure } from "@/components/move/AreaFigure";
 import { cn } from "@/lib/utils";
@@ -14,6 +16,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/history")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "History · Move Cards" },
       { name: "description", content: "See the exercises you've done this week." },
       { property: "og:title", content: "History · Move Cards" },
@@ -38,12 +42,14 @@ function History() {
   const [confirm, setConfirm] = useState(false);
   const [pickMode, setPickMode] = useState<"edit" | "delete" | null>(null);
   const [editing, setEditing] = useState<Completion | null>(null);
+  const [goalOpen, setGoalOpen] = useState(false);
 
   const selDate = stats.days.find((d) => dayKey(d.date) === selected)?.date ?? new Date();
   const entries = useMemo(() => mine.filter((c) => dayKey(new Date(c.doneAt)) === selected), [mine, selected]);
 
   return (
-    <main className="px-5 pt-10">
+    <main className="px-5 pt-8">
+      <div className="mb-6"><BackButton /></div>
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-title">History</h1>
@@ -88,12 +94,12 @@ function History() {
             );
           })}
         </ol>
-        <div className="mt-5">
-          <div className="flex justify-between text-[0.95rem]"><span className="font-bold">Weekly goal</span><span>{stats.daysDone} of 7 days</span></div>
-          <div className="mt-2 h-3 overflow-hidden rounded-full bg-night-soft">
-            <div className="h-full rounded-full bg-mustard" style={{ width: `${(stats.daysDone / 7) * 100}%` }} />
-          </div>
-        </div>
+        <PillButton variant="dark" onClick={() => setGoalOpen(true)} aria-label={`Change weekly goal, ${stats.daysDone} of ${settings.weeklyGoal} days`} className="mt-5 block rounded-xl bg-transparent p-0 text-left font-normal hover:bg-transparent">
+          <span className="flex flex-wrap justify-between gap-2 text-[0.95rem]"><span className="font-bold">Weekly goal</span><span>{stats.daysDone} of {settings.weeklyGoal} {settings.weeklyGoal === 1 ? "day" : "days"}</span></span>
+          <span className="mt-2 block h-3 overflow-hidden rounded-full bg-night-soft">
+            <span className="block h-full rounded-full bg-mustard" style={{ width: `${goalProgress(stats.daysDone, settings.weeklyGoal) * 100}%` }} />
+          </span>
+        </PillButton>
       </section>
 
       {pickMode && (
@@ -119,6 +125,7 @@ function History() {
 
       {confirm && <ClearHistoryDialog onClose={() => setConfirm(false)} onConfirm={async () => { await clearHistory(); toast.success("History cleared."); }} />}
       {editing && <EditDialog c={editing} onClose={() => setEditing(null)} />}
+      {goalOpen && <WeeklyGoalDialog onClose={() => setGoalOpen(false)} />}
     </main>
   );
 }

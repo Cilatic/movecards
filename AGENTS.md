@@ -14,3 +14,6 @@
 - All user data goes through useApp() in src/lib/app-store.tsx, which switches between Cloud tables (profiles, completions) and localStorage for guest mode — never query those tables directly from screens.
 - Tab screens wrap in TabScreen (src/components/move/AppGate.tsx) for the sign-in/guest gate and tab bar; exercise pages must not use it (no tab bar there).
 - Text size / high contrast are applied as data attributes on <html>; size everything in rem so it scales.
+- BackButton uses TanStack's positive history index for in-app back navigation and a typed parent fallback for direct entry; never use browser history length.
+- Weekly goal validation/progress is shared in a browser-safe helper, and all goal edits persist through useApp so account and guest screens stay consistent.
+- Shared interaction feedback lives in global CSS and applies only to interactive elements, leaving static content and placeholders unchanged.

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/how-to-use")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "How to use the cards · Move Cards" },
       { name: "description", content: "Pick a card, scan the QR code, follow the steps and tap Mark as done." },
       { property: "og:title", content: "How to use the cards · Move Cards" },

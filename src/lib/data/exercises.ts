@@ -36,6 +36,8 @@ export interface Exercise {
   duration: string;
   benefit: string;
   steps: Step[];
+  /** Optional Easier steps; steps remains the Standard version. */
+  easierSteps?: Step[];
   tip: string;
   safety: string;
   videos: { easier: string | null; standard: string | null };
@@ -123,4 +125,6 @@ export const EXERCISES: Exercise[] = AREAS.flatMap((area) =>
 
 export const getArea = (id: string) => AREAS.find((a) => a.id === id);
 export const getExercise = (id: string) => EXERCISES.find((e) => e.id === id);
+export const getExerciseSteps = (exercise: Exercise, level: "easier" | "standard"): Step[] =>
+  level === "easier" && exercise.easierSteps?.length ? exercise.easierSteps : exercise.steps;
 export const exercisesInArea = (id: AreaId) => EXERCISES.filter((e) => e.area === id);

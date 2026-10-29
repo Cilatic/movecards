@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN weekly_goal integer NOT NULL DEFAULT 3 CHECK (weekly_goal BETWEEN 1 AND 7);

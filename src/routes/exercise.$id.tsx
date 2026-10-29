@@ -32,7 +32,7 @@ function ExercisePage() {
   const { id } = Route.useLoaderData();
   const ex = getExercise(id)!;
   const area = getArea(ex.area)!;
-  const { settings, status } = useApp();
+  const { settings } = useApp();
   const [side, setSide] = useState<Side>(settings.mode === "helping" ? "help" : "do");
   const [simple, setSimple] = useState(false);
   const [sheet, setSheet] = useState(false);
@@ -48,7 +48,7 @@ function ExercisePage() {
         <div aria-hidden className={cn("absolute -bottom-10 -right-6 h-48 w-48 rounded-full", help ? "bg-night-foreground/15" : "bg-strength/20")} />
         <AreaFigure pose={area.pose} className="absolute bottom-0 right-6 h-36 w-32" />
         <div className="relative flex items-center justify-between">
-          <BackButton to={status === "signed-out" ? "/sign-in" : undefined} />
+          <BackButton areaId={ex.area} />
           <button type="button" onClick={() => setSimple(true)} aria-label="Simple view" className="flex h-14 w-14 items-center justify-center rounded-full bg-card shadow-soft">
             <Eye className="h-6 w-6" />
           </button>

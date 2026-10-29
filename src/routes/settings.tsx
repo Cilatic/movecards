@@ -4,7 +4,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { useApp, type TextSize } from "@/lib/app-store";
 import { TabScreen } from "@/components/move/AppGate";
-import { Field, PictureCard, PillButton } from "@/components/move/ui";
+import { BackButton, Field, PictureCard, PillButton } from "@/components/move/ui";
+import { GoalPicker } from "@/components/move/WeeklyGoal";
 import { HelpingAvatar, MeAvatar } from "@/components/move/illustrations";
 import { Bars, ClearHistoryDialog } from "@/components/move/shared";
 import { cn } from "@/lib/utils";
@@ -53,10 +54,14 @@ function Settings() {
   const navigate = useNavigate();
   const [name, setName] = useState(settings.name);
   const [confirm, setConfirm] = useState(false);
+  const [goal, setGoal] = useState(settings.weeklyGoal);
+  const [goalBusy, setGoalBusy] = useState(false);
   useEffect(() => setName(settings.name), [settings.name]);
+  useEffect(() => setGoal(settings.weeklyGoal), [settings.weeklyGoal]);
 
   return (
-    <main className="space-y-4 px-5 pt-10">
+    <main className="space-y-4 px-5 pt-8">
+      <div className="pb-2"><BackButton /></div>
       <h1 className="text-title">Settings</h1>
 
       <Panel title="Your account">
@@ -102,6 +107,16 @@ function Settings() {
             <span className={cn("absolute top-1 h-7 w-7 rounded-full bg-card shadow-soft transition-all", settings.highContrast ? "left-8" : "left-1")} />
           </span>
         </button>
+      </Panel>
+
+      <Panel title="Weekly goal">
+        <GoalPicker id="weekly-goal-settings" value={goal} onChange={setGoal} />
+        <PillButton disabled={goalBusy} onClick={async () => {
+          setGoalBusy(true);
+          try { await updateSettings({ weeklyGoal: goal }); toast.success("Weekly goal saved."); }
+          catch { toast.error("Your goal couldn't be saved. Please try again."); }
+          finally { setGoalBusy(false); }
+        }}>{goalBusy ? "Saving…" : "Save goal"}</PillButton>
       </Panel>
 
       <Panel title="Exercises">

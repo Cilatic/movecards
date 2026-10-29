@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useApp } from "@/lib/app-store";
-import { Field, PillButton, pill } from "@/components/move/ui";
+import { BackButton, Field, PillButton, pill } from "@/components/move/ui";
 import { SignInHero } from "@/components/move/illustrations";
 
 export const Route = createFileRoute("/sign-in")({
@@ -43,7 +43,8 @@ function SignIn() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-[30rem] flex-col pb-8">
+    <main className="relative mx-auto flex min-h-screen max-w-[30rem] flex-col pb-8">
+      <div className="absolute left-6 top-8 z-10"><BackButton /></div>
       <SignInHero />
       <div className="flex flex-1 flex-col px-6">
         <h1 className="text-title mt-2">Welcome back</h1>

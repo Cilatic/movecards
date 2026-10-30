@@ -69,7 +69,7 @@ function SignIn() {
           </button>
         </div>
         <div className="mt-auto pt-8">
-          <Link to="/create-account" className={pill({ variant: "white" })}>Create an account</Link>
+          <Link to="/create-account" className={pill({ variant: "white" })}>Create an Account</Link>
         </div>
       </div>
     </main>

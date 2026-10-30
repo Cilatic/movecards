@@ -51,7 +51,7 @@ function CreateAccount() {
       <div aria-hidden className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-blush" />
       <div aria-hidden className="absolute right-12 top-14 h-6 w-6 rounded-full bg-mustard" />
       <div className="relative"><BackButton to="/sign-in" /></div>
-      <h1 className="text-title relative mt-6">Create Account</h1>
+      <h1 className="text-title relative mt-6">Create account</h1>
 
       {sent ? (
         <div className="mt-6 rounded-card bg-card p-6 shadow-soft">
@@ -72,7 +72,7 @@ function CreateAccount() {
             <PictureCard label="Helping someone" selected={mode === "helping"} onClick={() => setMode("helping")}><HelpingAvatar /></PictureCard>
           </div>
           <div className="mt-auto space-y-3 pt-8">
-            <PillButton type="submit" disabled={busy}>{busy ? "Creating…" : "Create Account"}</PillButton>
+            <PillButton type="submit" disabled={busy}>{busy ? "Creating…" : "Create account"}</PillButton>
             <Link to="/sign-in" className="flex min-h-12 items-center justify-center text-base font-bold underline underline-offset-4">I already have an account</Link>
           </div>
         </form>

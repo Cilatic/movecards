@@ -19,3 +19,4 @@
 - Shared interaction feedback lives in global CSS and applies only to interactive elements, leaving static content and placeholders unchanged.
 - Standard exercise steps remain in steps; optional easierSteps resolve through getExerciseSteps for displayed, spoken and large-text instructions so level fallback stays consistent without duplicating content.
 - Exercise level state lives on the exercise page and is shared across card sides and large-text view so navigation between views retains the selection.
+- Shared PageLoading and router-state NavigationFeedback cover startup and pending navigation without delaying synchronous pages or altering account data loading.

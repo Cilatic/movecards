@@ -2,7 +2,8 @@ import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Check, Eye, Lightbulb, Play, Volume2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getArea, getExercise, getExerciseSteps, type Exercise, type Version } from "@/lib/data/exercises";
+import { getExercise, getExerciseSteps, type Exercise, type Version } from "@/lib/data/exercises";
+import { useContent } from "@/lib/content";
 import { useApp } from "@/lib/app-store";
 import { BackButton, PillButton, PillSwitch } from "@/components/move/ui";
 import { AreaFigure } from "@/components/move/AreaFigure";
@@ -32,8 +33,9 @@ type Side = "do" | "help";
 
 function ExercisePage() {
   const { id } = Route.useLoaderData();
-  const ex = getExercise(id);
-  const area = ex ? getArea(ex.area) : undefined;
+  const content = useContent();
+  const ex = content.getExercise(id);
+  const area = ex ? content.getArea(ex.area) : undefined;
   const { settings } = useApp();
   const [side, setSide] = useState<Side>(settings.mode === "helping" ? "help" : "do");
   const [simple, setSimple] = useState(false);

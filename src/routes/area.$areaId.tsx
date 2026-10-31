@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Check, ChevronRight } from "lucide-react";
-import { exercisesInArea, getArea, type AreaId } from "@/lib/data/exercises";
+import { getArea, type AreaId } from "@/lib/data/exercises";
+import { useContent } from "@/lib/content";
 import { useApp } from "@/lib/app-store";
 import { doneExerciseIds } from "@/lib/stats";
 import { BackButton } from "@/components/move/ui";
@@ -29,8 +30,9 @@ export const Route = createFileRoute("/area/$areaId")({
 
 function AreaPage() {
   const { id, name } = Route.useLoaderData();
-  const area = getArea(id)!;
-  const list = exercisesInArea(id as AreaId);
+  const content = useContent();
+  const area = content.getArea(id)!;
+  const list = content.exercisesInArea(id as AreaId);
   const { completions, settings } = useApp();
   const done = doneExerciseIds(completions.filter((c) => c.mode === settings.mode));
   const n = list.filter((e) => done.has(e.id)).length;

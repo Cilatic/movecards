@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useApp } from "@/lib/app-store";
 import { doneExerciseIds } from "@/lib/stats";
-import { AREAS, exercisesInArea } from "@/lib/data/exercises";
+import { useContent } from "@/lib/content";
 import { TabScreen } from "@/components/move/AppGate";
 import { AreaFigure } from "@/components/move/AreaFigure";
 import { cn } from "@/lib/utils";
@@ -42,7 +42,7 @@ function Exercises() {
       <h1 className="text-title">Exercises</h1>
       <p className="mt-1 text-[1.05rem] text-muted-foreground">35 exercises in 5 areas</p>
       <ul className="mt-6 grid grid-cols-2 gap-4">
-        {AREAS.map((a) => {
+        {areas.map((a) => {
           const list = exercisesInArea(a.id);
           const n = list.filter((e) => done.has(e.id)).length;
           const wide = a.id === "mind";

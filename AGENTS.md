@@ -10,7 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
-- Exercise/area content is static code in src/lib/data/exercises.ts (not DB) so QR-linked pages render without a backend round trip.
+- Built-in exercise/area content stays in src/lib/data/exercises.ts as the fallback; editor overrides (draft/published per key) merge over it via useContent() in src/lib/content.tsx, so screens must read content through useContent, never the static exports, and pages still render instantly before overrides load.
+- The /editor previews by loading the real exercise page in an iframe and posting draft content to it; editing rights come only from the admin role row checked by database policies.
 - All user data goes through useApp() in src/lib/app-store.tsx, which switches between Cloud tables (profiles, completions) and localStorage for guest mode — never query those tables directly from screens.
 - Tab screens wrap in TabScreen (src/components/move/AppGate.tsx) for the sign-in/guest gate and tab bar; exercise pages must not use it (no tab bar there).
 - Text size / high contrast are applied as data attributes on <html>; size everything in rem so it scales.

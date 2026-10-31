@@ -67,8 +67,10 @@ function Editor() {
   const [view, setView] = useState<View>("split");
   const [busy, setBusy] = useState(false);
 
+  const loaded = useRef(false);
   useEffect(() => {
-    if (!rows) return;
+    if (!rows || loaded.current) return;
+    loaded.current = true;
     const m: ContentMap = {};
     for (const r of rows) m[r.key] = r.draft ?? r.published;
     setEdits(m);
@@ -107,6 +109,7 @@ function Editor() {
         const { error } = await supabase.from("content_entries").upsert(payload);
         if (error) throw error;
       }
+      setDirty(new Set());
       await qc.invalidateQueries({ queryKey: ["content"] });
       toast.success(publish ? "Published. Everyone now sees these changes." : "Draft saved. Only you can see it here.");
     } catch {

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-store";
-import { AREAS, EXERCISES, type Exercise, type Step } from "@/lib/data/exercises";
+import { EXERCISES, type Exercise, type Step } from "@/lib/data/exercises";
 import { areaKey, exerciseKey, mergeContent, PREVIEW_MESSAGE, type ContentMap } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -297,4 +297,3 @@ function ExerciseForm({ ex, areaName, onChange, onAreaName }: { ex: Exercise; ar
   );
 }
 
-void AREAS;

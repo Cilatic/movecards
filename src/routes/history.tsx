@@ -139,6 +139,7 @@ function MenuItem({ children, onClick, danger }: { children: React.ReactNode; on
 function Entry({ c, pickMode, onEdit, onPicked }: { c: Completion; pickMode: "edit" | "delete" | null; onEdit: () => void; onPicked: () => void }) {
   const { deleteCompletion } = useApp();
   const [open, setOpen] = useState(false);
+  const { getExercise, getArea } = useContent();
   const ex = getExercise(c.exerciseId);
   const area = ex ? getArea(ex.area) : undefined;
   const del = async () => { await deleteCompletion(c.id); toast.success("Entry deleted."); };
@@ -182,6 +183,7 @@ function EditDialog({ c, onClose }: { c: Completion; onClose: () => void }) {
   const [version, setVersion] = useState<Version>(c.version);
   const d = new Date(c.doneAt);
   const [day, setDay] = useState(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  const { getExercise } = useContent();
   async function save() {
     const [y, m, dd] = day.split("-").map(Number);
     const next = new Date(d);

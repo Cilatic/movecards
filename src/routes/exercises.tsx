@@ -35,6 +35,7 @@ const BG: Record<string, string> = {
 
 function Exercises() {
   const { completions, settings } = useApp();
+  const { areas, exercisesInArea } = useContent();
   const done = doneExerciseIds(completions.filter((c) => c.mode === settings.mode));
   return (
     <main className="px-5 pt-8">
